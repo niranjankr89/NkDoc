@@ -1,0 +1,44 @@
+**********************************
+1. Get configuration Value:
+ public static string GetStaticEnv()
+ {
+    return Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["Environment"]).ToLower();
+ }
+
+
+2. Save image on FTP:
+public bool UploadFileToFTP(string postedFile, string fileName, string staticFtpHostName, string staticFtpUserId, string staticFtpPwd)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(postedFile) || string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(staticFtpHostName) ||
+                    string.IsNullOrEmpty(staticFtpUserId) || string.IsNullOrEmpty(staticFtpPwd)) return false;
+                byte[] fileBytes = Convert.FromBase64String(postedFile.Split(';')[1].Replace("base64,", ""));
+                if (fileBytes.Length <= 0) return false;
+
+                //Create FTP Request.
+                FtpWebRequest ftpWebRequest = (FtpWebRequest)WebRequest.Create(staticFtpHostName + fileName);
+                ftpWebRequest.Method = WebRequestMethods.Ftp.UploadFile;
+
+                //Enter FTP Server credentials.
+                ftpWebRequest.Credentials = new NetworkCredential(staticFtpUserId, staticFtpPwd);
+                ftpWebRequest.ContentLength = fileBytes.Length;
+                ftpWebRequest.UsePassive = true;
+                ftpWebRequest.UseBinary = true;
+                ftpWebRequest.ServicePoint.ConnectionLimit = fileBytes.Length;
+                ftpWebRequest.EnableSsl = false;
+                using (Stream requestStream = ftpWebRequest.GetRequestStream())
+                {
+                    requestStream.Write(fileBytes, 0, fileBytes.Length);
+                    requestStream.Close();
+                }
+                FtpWebResponse ftpWebResponse = (FtpWebResponse)ftpWebRequest.GetResponse();
+                ftpWebResponse.Close();
+                return true;
+            }
+            catch (WebException ex)
+            {
+                return false;
+                throw new Exception((ex.Response as FtpWebResponse).StatusDescription);
+            }
+        }

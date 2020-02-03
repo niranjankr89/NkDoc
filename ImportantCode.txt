@@ -42,3 +42,7 @@ public bool UploadFileToFTP(string postedFile, string fileName, string staticFtp
                 throw new Exception((ex.Response as FtpWebResponse).StatusDescription);
             }
         }
+        
+        
+**********************************************
+

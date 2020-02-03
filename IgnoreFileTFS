@@ -1,0 +1,22 @@
+######################################
+# Ignore .cpp files in the ProjA sub-folder and all its subfolders
+ProjA\*.cpp
+#
+# Ignore .dll files in this folder
+\*.dll
+# Ignore .pdb files in this folder
+\*.pdb
+# Ignore .pubxml files in this folder
+\*.pubxml
+#
+# Ignore all files in the Temp sub-folder
+\Temp
+#
+# Ignore all files in the Release sub-folder
+\Release
+#
+# Ignore all files in the Debug sub-folder
+\Debug
+#
+# Do not ignore .dll files in this folder nor in any of its sub-folders
+!*.txt
